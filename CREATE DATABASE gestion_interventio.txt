@@ -1,0 +1,27 @@
+utilise php 8.2 apres avoir installer composer 
+
+CREATE DATABASE gestion_intervention
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+
+php artisan migrate
+php artisan db:seed
+
+✓ Rôles créés avec succès.
+✓ Utilisateurs créés avec succès.
+  Admin :      admin@gestion-it.local    / Admin@123!
+  Technicien:  jean.dupont@gestion-it.local / Tech@123!
+  Utilisateur: alice.durand@gestion-it.local / User@123!
+✓ Stock initial créé avec succès.
+
+
+Étape 7 — Lien de stockage fichiers
+
+php artisan storage:link
+
+Étape 8 — Lancer le serveur
+
+php artisan serve
+L'API tourne sur : http://localhost:8000
+

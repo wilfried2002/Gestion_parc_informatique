@@ -18,7 +18,7 @@ class TicketRequest extends FormRequest
             'title'       => ['required', 'string', 'min:5', 'max:255'],
             'description' => ['required', 'string', 'min:10'],
             'priority'    => ['required', Rule::in(['low', 'medium', 'high', 'critical'])],
-            'category'    => ['required', Rule::in(['hardware', 'software', 'network', 'other'])],
+            'category'    => ['required', Rule::in(['materiel', 'logiciel', 'reseau', 'securite', 'autre'])],
         ];
     }
 
@@ -32,7 +32,7 @@ class TicketRequest extends FormRequest
             'priority.required'    => "La priorité est obligatoire.",
             'priority.in'          => "La priorité doit être : low, medium, high ou critical.",
             'category.required'    => "La catégorie est obligatoire.",
-            'category.in'          => "La catégorie doit être : hardware, software, network ou other.",
+            'category.in'          => "La catégorie doit être : materiel, logiciel, reseau, securite ou autre.",
         ];
     }
 }

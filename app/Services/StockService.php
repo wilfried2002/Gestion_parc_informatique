@@ -29,10 +29,19 @@ class StockService
 
     public function create(array $data, User $creator): Stock
     {
+        if (empty($data['reference'])) {
+            $data['reference'] = $this->stockRepository->generateReference();
+        }
+
         $stock = $this->stockRepository->create($data);
         $this->logService->log('created', $creator, Stock::class, $stock->id, null, $stock->toArray());
 
         return $stock;
+    }
+
+    public function nextReference(): string
+    {
+        return $this->stockRepository->generateReference();
     }
 
     public function update(int $id, array $data, User $updater): Stock

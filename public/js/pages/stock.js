@@ -118,6 +118,15 @@ const StockPage = {
             catch (e) { UI.toast(e.message, 'error'); return; }
         }
 
+        // Récupère la prochaine référence disponible pour une création
+        let nextRef = '';
+        if (!isEdit) {
+            try {
+                const r = await API.get('/stocks/next-reference');
+                nextRef = r.data?.reference || '';
+            } catch {}
+        }
+
         const categories = ['ordinateur','imprimante','serveur','reseau','peripherique','consommable','autre'];
         const statuses   = ['disponible','affecte','maintenance','hors_service'];
         const catLabels  = { ordinateur:'Ordinateur', imprimante:'Imprimante', serveur:'Serveur', reseau:'Réseau', peripherique:'Périphérique', consommable:'Consommable', autre:'Autre' };
@@ -148,8 +157,16 @@ const StockPage = {
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label">Référence</label>
-                    <input name="reference" class="form-control" placeholder="REF-001" value="${s?.reference || ''}">
+                    <label class="form-label">
+                        Référence
+                        ${!isEdit ? '<span class="text-muted" style="font-size:0.75rem;font-weight:400;"> — générée automatiquement</span>' : ''}
+                    </label>
+                    <div class="input-group">
+                        <input name="reference" class="form-control"
+                            value="${isEdit ? (s?.reference || '') : nextRef}"
+                            ${!isEdit ? 'readonly style="background:#f8fafc;font-weight:600;color:#2563eb;"' : 'placeholder="MAT-2026-0001"'}>
+                        ${!isEdit ? `<span class="input-group-text" style="background:#f0f9ff;color:#2563eb;border-color:#bae6fd;" title="Référence générée automatiquement"><i class="fas fa-magic"></i></span>` : ''}
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">N° de série</label>
@@ -172,7 +189,7 @@ const StockPage = {
                     <input name="quantity_min" type="number" min="0" class="form-control" value="${s?.quantity_min ?? ''}">
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Prix d'achat (€)</label>
+                    <label class="form-label">Prix d'achat (FCFA)</label>
                     <input name="purchase_price" type="number" step="0.01" min="0" class="form-control" value="${s?.purchase_price || ''}">
                 </div>
                 <div class="col-md-4">
@@ -285,7 +302,7 @@ const StockPage = {
                 <div class="detail-row"><span class="detail-label">Quantité</span><span class="detail-value">${s.quantity} (min: ${s.quantity_min || 0})</span></div>
                 <div class="detail-row"><span class="detail-label">Localisation</span><span class="detail-value">${s.location || '—'}</span></div>
                 <div class="detail-row"><span class="detail-label">Marque / Modèle</span><span class="detail-value">${[s.brand, s.model].filter(Boolean).join(' / ') || '—'}</span></div>
-                <div class="detail-row"><span class="detail-label">Prix d'achat</span><span class="detail-value">${s.purchase_price ? s.purchase_price + ' €' : '—'}</span></div>
+                <div class="detail-row"><span class="detail-label">Prix d'achat</span><span class="detail-value">${s.purchase_price ? Number(s.purchase_price).toLocaleString('fr-FR') + ' FCFA' : '—'}</span></div>
                 <div class="detail-row"><span class="detail-label">Date achat</span><span class="detail-value">${UI.fmtDate(s.purchase_date)}</span></div>
                 <div class="detail-row"><span class="detail-label">Fin garantie</span><span class="detail-value">${UI.fmtDate(s.warranty_end)}</span></div>
             </div>

@@ -53,4 +53,18 @@ class StockRepository extends BaseRepository
     {
         return Stock::lowStock()->where('status', '!=', Stock::STATUS_HORS_SERVICE)->get();
     }
+
+    public function generateReference(): string
+    {
+        $year   = date('Y');
+        $prefix = "MAT-{$year}-";
+
+        $last = Stock::withTrashed()
+            ->where('reference', 'like', "{$prefix}%")
+            ->max('reference');
+
+        $next = $last ? ((int) substr($last, strlen($prefix))) + 1 : 1;
+
+        return sprintf('%s%04d', $prefix, $next);
+    }
 }

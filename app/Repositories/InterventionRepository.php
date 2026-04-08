@@ -55,9 +55,15 @@ class InterventionRepository extends BaseRepository
 
     public function generateReference(): string
     {
-        $year  = date('Y');
-        $count = Intervention::whereYear('created_at', $year)->count() + 1;
+        $year   = date('Y');
+        $prefix = "INT-{$year}-";
 
-        return sprintf('INT-%s-%04d', $year, $count);
+        $last = Intervention::withTrashed()
+            ->where('reference', 'like', "{$prefix}%")
+            ->max('reference');
+
+        $next = $last ? ((int) substr($last, strlen($prefix))) + 1 : 1;
+
+        return sprintf('%s%04d', $prefix, $next);
     }
 }

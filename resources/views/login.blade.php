@@ -73,16 +73,6 @@
         .btn-login:active { transform: translateY(0); }
         .btn-login:disabled { opacity: 0.6; transform: none; }
         .alert-danger { border-radius: 10px; font-size: 0.9rem; }
-        .demo-info {
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 0.82rem;
-            color: #0369a1;
-            margin-top: 20px;
-        }
-        .demo-info strong { display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -124,12 +114,6 @@
         </button>
     </form>
 
-    <div class="demo-info">
-        <strong><i class="fas fa-info-circle me-1"></i> Comptes de démonstration</strong>
-        Admin : admin@gmail.com / Admin1234@<br>
-        Technicien : jean.dupont@gestion-it.local / Tech@123!<br>
-        Utilisateur : alice.durand@gestion-it.local / User@123!
-    </div>
 </div>
 
 <script>

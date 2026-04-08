@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description');
             $table->enum('priority', ['low', 'medium', 'high', 'critical'])->default('medium');
             $table->enum('status', ['open', 'assigned', 'in_progress', 'resolved', 'closed'])->default('open');
-            $table->enum('category', ['hardware', 'software', 'network', 'other'])->default('other');
+            $table->enum('category', ['materiel', 'logiciel', 'reseau', 'securite', 'autre'])->default('autre');
             $table->timestamp('resolved_at')->nullable();
             $table->timestamp('closed_at')->nullable();
             $table->timestamps();

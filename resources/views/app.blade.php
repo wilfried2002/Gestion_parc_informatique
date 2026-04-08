@@ -65,6 +65,32 @@
         <div class="header-right">
             <span class="header-user-badge" id="header-role-badge"></span>
             <span class="header-username" id="header-username"></span>
+
+            <!-- ── Cloche notifications ── -->
+            <div class="notif-bell-wrap" id="notif-bell-wrap">
+                <button class="notif-bell-btn" id="notif-bell-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge d-none" id="notif-badge">0</span>
+                </button>
+
+                <!-- Dropdown -->
+                <div class="notif-dropdown d-none" id="notif-dropdown">
+                    <div class="notif-dropdown-header">
+                        <span class="notif-dropdown-title">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </span>
+                        <button class="notif-read-all-btn" id="notif-read-all" title="Tout marquer comme lu">
+                            <i class="fas fa-check-double"></i>
+                        </button>
+                    </div>
+                    <div class="notif-list" id="notif-list">
+                        <div class="notif-empty">
+                            <i class="fas fa-bell-slash"></i>
+                            <p>Aucune notification</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -266,6 +292,7 @@
 <script src="/js/pages/interventions.js"></script>
 <script src="/js/pages/stock.js"></script>
 <script src="/js/pages/users.js"></script>
+<script src="/js/notifications.js"></script>
 <script src="/js/app.js"></script>
 </body>
 </html>

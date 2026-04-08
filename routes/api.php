@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AttachmentController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\InterventionController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\StockController;
 use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\UserController;
@@ -72,9 +73,10 @@ Route::middleware('auth:api')->group(function () {
 
     // ─── Stock & Affectations ───────────────────────────────
     Route::prefix('stocks')->name('stocks.')->group(function () {
-        Route::get('/',          [StockController::class, 'index'])->name('index');
-        Route::get('/low-stock', [StockController::class, 'lowStock'])->middleware('role:admin')->name('low-stock');
-        Route::get('/{id}',      [StockController::class, 'show'])->name('show');
+        Route::get('/',                [StockController::class, 'index'])->name('index');
+        Route::get('/next-reference',  [StockController::class, 'nextReference'])->middleware('role:admin')->name('next-reference');
+        Route::get('/low-stock',       [StockController::class, 'lowStock'])->middleware('role:admin')->name('low-stock');
+        Route::get('/{id}',            [StockController::class, 'show'])->name('show');
 
         // Admin only
         Route::middleware('role:admin')->group(function () {
@@ -101,5 +103,13 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('attachments')->name('attachments.')->group(function () {
         Route::get   ('/{id}/download', [AttachmentController::class, 'download'])->name('download');
         Route::delete('/{id}',          [AttachmentController::class, 'destroy'])->name('destroy');
+    });
+
+    // ─── Notifications ───────────────────────────────────────
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get   ('/',          [NotificationController::class, 'index'])->name('index');
+        Route::patch ('/read-all',  [NotificationController::class, 'markAllRead'])->name('read-all');
+        Route::patch ('/{id}/read', [NotificationController::class, 'markRead'])->name('read');
+        Route::delete('/{id}',      [NotificationController::class, 'destroy'])->name('destroy');
     });
 });

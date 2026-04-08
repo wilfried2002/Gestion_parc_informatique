@@ -119,6 +119,15 @@ class StockController extends Controller
     }
 
     /**
+     * GET /api/stocks/next-reference   [Admin]
+     * Retourne la prochaine référence disponible.
+     */
+    public function nextReference(): JsonResponse
+    {
+        return $this->success(['reference' => $this->stockService->nextReference()]);
+    }
+
+    /**
      * GET /api/stocks/low-stock   [Admin]
      * Liste les articles en alerte de stock.
      */

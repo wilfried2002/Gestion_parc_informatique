@@ -16,12 +16,6 @@ const TicketsPage = {
             const res = await API.get(`/tickets?${params}`);
             wrap.innerHTML = this.renderTable(res.data, res.meta);
             UI.bindPagination('tickets-table-wrap', p => this.load(p));
-
-            // Load technicians list for admin
-            if (API.isAdmin() && !this.technicians.length) {
-                const tr = await API.get('/users/technicians');
-                this.technicians = tr.data || [];
-            }
             this.bindTableEvents();
         } catch (e) {
             wrap.innerHTML = `<div class="alert alert-danger m-3">${e.message}</div>`;
@@ -170,9 +164,17 @@ const TicketsPage = {
 
     // ── Assigner ────────────────────────────────────────────────────────
     async openAssign(id) {
+        // Toujours recharger la liste pour inclure les techniciens récemment ajoutés
+        try {
+            const r = await API.get('/users/technicians');
+            this.technicians = r.data || [];
+        } catch {
+            UI.toast('Impossible de charger les techniciens.', 'error'); return;
+        }
+
         if (!this.technicians.length) {
-            try { const r = await API.get('/users/technicians'); this.technicians = r.data || []; }
-            catch { UI.toast('Impossible de charger les techniciens.', 'error'); return; }
+            UI.toast('Aucun technicien actif disponible. Créez-en un dans la gestion des utilisateurs.', 'warning');
+            return;
         }
 
         const body = `

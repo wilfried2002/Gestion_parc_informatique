@@ -2,11 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\Role;
 use App\Models\Ticket;
 use App\Models\User;
+use App\Notifications\NewTicketNotification;
+use App\Notifications\TicketAssignedNotification;
 use App\Repositories\TicketRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class TicketService
 {
@@ -40,6 +44,13 @@ class TicketService
 
             $this->logService->log('created', $creator, Ticket::class, $ticket->id, null, $ticket->toArray());
 
+            // Notifier tous les administrateurs actifs (silencieux si mail indisponible)
+            try {
+                $this->notifyAdmins($ticket->load('user'));
+            } catch (\Throwable $e) {
+                \Log::warning('Notification ticket impossible : ' . $e->getMessage());
+            }
+
             return $ticket;
         });
     }
@@ -47,7 +58,7 @@ class TicketService
     public function update(int $id, array $data, User $updater): Ticket
     {
         return DB::transaction(function () use ($id, $data, $updater) {
-            $ticket   = $this->ticketRepository->findById($id);
+            $ticket    = $this->ticketRepository->findById($id);
             $oldValues = $ticket->only(['title', 'description', 'priority', 'status', 'category']);
 
             $updated = $this->ticketRepository->update($id, $data);
@@ -82,6 +93,12 @@ class TicketService
                 'status'        => Ticket::STATUS_ASSIGNED,
             ]);
 
+            // Notifier le technicien assigné
+            $technician = User::find($technicianId);
+            if ($technician) {
+                $technician->notify(new TicketAssignedNotification($ticket->load('user'), $admin));
+            }
+
             return $ticket;
         });
     }
@@ -113,5 +130,19 @@ class TicketService
         $ticket = $this->ticketRepository->findById($id);
         $this->ticketRepository->delete($id);
         $this->logService->log('deleted', $user, Ticket::class, $id, $ticket->toArray(), null);
+    }
+
+    // ── Private ──────────────────────────────────────────────────────────────
+
+    /**
+     * Envoie une notification à tous les administrateurs actifs.
+     */
+    private function notifyAdmins(Ticket $ticket): void
+    {
+        $admins = User::whereHas('role', fn ($q) => $q->where('name', Role::ADMIN))
+            ->where('is_active', true)
+            ->get();
+
+        Notification::send($admins, new NewTicketNotification($ticket));
     }
 }

@@ -104,6 +104,9 @@
         StockPage.bindFilters();
         UsersPage.bindFilters();
 
+        // Démarrer le système de notifications
+        Notifications.init();
+
         // Start on dashboard
         navigate('dashboard');
     }

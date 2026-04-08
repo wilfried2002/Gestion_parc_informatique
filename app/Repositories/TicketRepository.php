@@ -80,9 +80,15 @@ class TicketRepository extends BaseRepository
      */
     public function generateReference(): string
     {
-        $year  = date('Y');
-        $count = Ticket::whereYear('created_at', $year)->count() + 1;
+        $year = date('Y');
+        $prefix = "TKT-{$year}-";
 
-        return sprintf('TKT-%s-%04d', $year, $count);
+        $last = Ticket::withTrashed()
+            ->where('reference', 'like', "{$prefix}%")
+            ->max('reference');
+
+        $next = $last ? ((int) substr($last, strlen($prefix))) + 1 : 1;
+
+        return sprintf('%s%04d', $prefix, $next);
     }
 }
