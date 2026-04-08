@@ -155,4 +155,7 @@ const UI = {
         if (!form) return;
         Object.entries(values).forEach(([k, v]) => {
             const el = form.querySelector(`[name="${k}"]`);
-            if (el && v
+            if (el && v !== null && v !== undefined) el.value = v;
+        });
+    },
+};

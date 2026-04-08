@@ -11,14 +11,12 @@ return new class extends Migration
         Schema::create('attachments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
-            $table->morphs('attachable'); // attachable_type + attachable_id (tickets, interventions)
+            $table->morphs('attachable'); // attachable_type + attachable_id + index auto
             $table->string('original_name');
             $table->string('file_path');
             $table->string('file_type')->nullable(); // MIME type
             $table->unsignedBigInteger('file_size')->nullable(); // En bytes
             $table->timestamps();
-
-            $table->index(['attachable_type', 'attachable_id']);
         });
     }
 

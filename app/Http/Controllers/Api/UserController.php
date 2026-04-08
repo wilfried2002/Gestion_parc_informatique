@@ -39,7 +39,7 @@ class UserController extends Controller
         ]);
 
         try {
-            $user = $this->userService->create($request->all(), auth()->user());
+            $user = $this->userService->create($request->except('password_confirmation'), auth()->user());
 
             return $this->success($user, 'Utilisateur créé.', 201);
         } catch (\Exception $e) {
@@ -75,7 +75,7 @@ class UserController extends Controller
         ]);
 
         try {
-            $user = $this->userService->update($id, $request->all(), auth()->user());
+            $user = $this->userService->update($id, $request->except('password_confirmation'), auth()->user());
 
             return $this->success($user, 'Utilisateur mis à jour.');
         } catch (\Exception $e) {
