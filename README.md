@@ -88,7 +88,7 @@ L'API est accessible sur : `http://localhost:8000/api`
 
 | Rôle          | Email                            | Mot de passe |
 |---------------|----------------------------------|--------------|
-| Administrateur | admin@gestion-it.local          | Admin1234@   |
+| Administrateur | admin@gmail.com                 | Admin1234@   |
 ## Architecture des dossiers
 
 ```
