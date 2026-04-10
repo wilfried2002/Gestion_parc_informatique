@@ -4,7 +4,7 @@ CREATE DATABASE gestion_intervention
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-
+php makemigration 
 php artisan migrate
 php artisan db:seed
 
